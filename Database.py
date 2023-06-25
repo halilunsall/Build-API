@@ -84,8 +84,11 @@ class Movie(Resource):
 
     # DEL METHOD
     def delete(self, movie_id):
-        video_not_exists(movie_id)
-        del movies[movie_id]
+        result = MovieModel.query.filter_by(id=movie_id).first()
+        if not result:
+            abort(404, message="Could not find movie with that id...")
+        db.session.delete(result)
+        db.session.commit()
         return "", 204
     
 
